@@ -6,6 +6,7 @@
 #include <aslam/cameras/distortion-fisheye.h>
 #include <aslam/cameras/distortion-null.h>
 #include <aslam/cameras/distortion-radtan.h>
+#include <aslam/cameras/distortion-doublesphere.h>
 #include <aslam/common/yaml-serialization.h>
 
 namespace YAML {
@@ -60,9 +61,19 @@ bool convert<std::shared_ptr<aslam::Camera> >::decode(const Node& node,
                 "valid RadTan distortion parameters look like.";
             return true;
           }
+        } else if(distortion_type == "double-sphere") {
+          if (aslam::DoubleSphereDistortion::areParametersValid(distortion_parameters)) {
+            distortion.reset(new aslam::DoubleSphereDistortion(distortion_parameters));
+          } else {
+            LOG(ERROR) << "Invalid distortion parameters for the DoubleSphere distortion model: "
+                << distortion_parameters.transpose() << std::endl <<
+                "See aslam::DoubleSphereDistortion::areParametersValid(...) for conditions on what "
+                "valid DoubleSphere distortion parameters look like.";
+            return true;
+          }
         } else {
             LOG(ERROR) << "Unknown distortion model: \"" << distortion_type << "\". "
-                << "Valid values are {none, equidistant, fisheye, radial-tangential}.";
+                << "Valid values are {none, equidistant, fisheye, radial-tangential, double-sphere}.";
             return true;
         }
         if (!distortion->distortionParametersValid(distortion_parameters)) {

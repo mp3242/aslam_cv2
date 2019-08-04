@@ -24,7 +24,8 @@ class Distortion {
     kNoDistortion = 0,
     kEquidistant = 1,
     kFisheye = 2,
-    kRadTan = 3
+    kRadTan = 3,
+    kDoubleSphere = 4
   };
 
   //////////////////////////////////////////////////////////////

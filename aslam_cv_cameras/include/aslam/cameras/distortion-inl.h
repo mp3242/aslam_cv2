@@ -10,6 +10,7 @@ inline std::ostream& operator<<(std::ostream& out, const Distortion::Type& value
     INSERT_ELEMENT(Distortion::Type, kEquidistant);
     INSERT_ELEMENT(Distortion::Type, kFisheye);
     INSERT_ELEMENT(Distortion::Type, kRadTan);
+    INSERT_ELEMENT(Distortion::Type, kDoubleSphere);
     #undef INSERT_ELEMENT
   }
   return out << names[value];
