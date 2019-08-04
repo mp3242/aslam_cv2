@@ -57,8 +57,8 @@ void DoubleSphereDistortion::distortUsingExternalCoefficients(
                      dvf_du, dvf_dv;
   }
 
-  x *= scaling;
-  y *= scaling;
+  x *= s;
+  y *= s;
 }
 
 void DoubleSphereDistortion::distortParameterJacobian(
@@ -87,7 +87,7 @@ void DoubleSphereDistortion::distortParameterJacobian(
     return;
   }
 
-  double dd2_dk1 = (k1 * k1 + 2 * k1) / (2 * d2)
+  double dd2_dk1 = (k1 * k1 + 2 * k1) / (2 * d2);
 
   const double duf_dk1 = -x * s * s * (k2 * dd2_dk1 - d1 * (k2 - 1));
   const double duf_dk2 = -x * s * s * (d2 - k1 * d1 - 1);
@@ -105,19 +105,19 @@ void DoubleSphereDistortion::undistortUsingExternalCoefficients(const Eigen::Vec
   CHECK_EQ(dist_coeffs.size(), kNumOfParams) << "dist_coeffs: invalid size!";
   CHECK_NOTNULL(point);
 
-  const double& k1 = (*dist_coeffs)(0); // The first double sphere distortion parameter (xi).
-  const double& k2 = (*dist_coeffs)(1); // The second double sphere distortion parameter (alpha).
+  const double& k1 = dist_coeffs(0); // The first double sphere distortion parameter (xi).
+  const double& k2 = dist_coeffs(1); // The second double sphere distortion parameter (alpha).
 
   // Calculate distance from point to center.
   double r2 = point->squaredNorm();
 
-  if (r == 0) {
+  if (r2 == 0) {
     return;
   }
 
   double m_z = (1 - k2 * k2 * r2) / (k2 * sqrt(1 - (2 * k2 - 1) * r2) + 1 - k2);
   double s = (m_z * k1 + sqrt(m_z * m_z + (1 - k1 * k1) * r2)) / (m_z * m_z + r2);
-  r_u = s / (m_z * s - k1);
+  double r_u = s / (m_z * s - k1);
 
   (*point) *= r_u;
 }
@@ -127,7 +127,7 @@ bool DoubleSphereDistortion::areParametersValid(const Eigen::VectorXd& parameter
   if (parameters.size() != kNumOfParams)
     return false;
 
-  return valid;
+  return true;
 }
 
 bool DoubleSphereDistortion::distortionParametersValid(const Eigen::VectorXd& dist_coeffs) const {
