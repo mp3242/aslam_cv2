@@ -17,6 +17,7 @@ set(SOURCES
   src/distortion-equidistant.cc
   src/distortion-fisheye.cc
   src/distortion-radtan.cc
+  src/distortion-doublesphere.cc
   src/ncamera.cc
   src/ncamera-yaml-serialization.cc
 )
